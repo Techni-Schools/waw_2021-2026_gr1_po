@@ -12,3 +12,7 @@ class King(Piece):
             (x - 1, y),
             (x + 1, y)
         ]
+
+
+    def __str__(self):
+        return "King"

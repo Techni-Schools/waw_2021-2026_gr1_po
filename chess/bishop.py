@@ -22,3 +22,6 @@ class Bishop(Piece):
         column_moves.extend(row_moves)
         return column_moves
 
+    def __str__(self):
+        return "Shop"
+
