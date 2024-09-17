@@ -38,6 +38,11 @@ class Board:
             return False
         if self.board[x2][y2].piece:
             return False
+        piece = self.board[x1][y1].piece
+        list_of_moves = piece.get_moves(y1, x1)
+        if (x2, y2)  not in list_of_moves:
+            return False
+
 
 
 board = Board()

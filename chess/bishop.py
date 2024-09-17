@@ -25,3 +25,7 @@ class Bishop(Piece):
     def __str__(self):
         return "Shop"
 
+    def get_moves_beetwen(self, x1: int, y1: int, x2: int, y2: int) -> list[tuple[int, int]]:
+        step_x = 1 if x1 < x2 else -1
+        step_y = 1 if y1 < y2 else -1
+        return [(x1 + i, y1 + j) for i, j in zip(range(step_x, x2, step_x), range(step_y, y2, step_y))]
