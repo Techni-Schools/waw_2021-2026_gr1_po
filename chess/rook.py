@@ -24,7 +24,7 @@ class Rook(Piece):
     def __str__(self):
         return "Rook"
 
-    def get_moves_beetwen(self, x1: int, y1: int, x2: int, y2: int) -> list[tuple[int, int]]:
+    def get_moves_between(self, x1: int, y1: int, x2: int, y2: int) -> list[tuple[int, int]]:
         if x1 == x2:
             step = 1 if y1 < y2 else -1
             return [(x1, i) for i in range(y1+step, y2, step)]
