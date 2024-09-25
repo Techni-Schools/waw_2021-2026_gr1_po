@@ -14,7 +14,19 @@ class InvalidMoveException(Exception):
 class Board:
     def __init__(self):
         first_row = [Rook(), Knight(), Bishop(), Queen(), King(), Bishop(), Knight(), Rook()]
-        self.board = [[Field(piece), Field(Pawn()), *[Field() for _ in range(6)]] for piece in first_row]
+        last_row = first_row.copy()
+        self.board = [
+            [
+                Field(white_piece),
+                Field(Pawn()),
+                *[Field() for _ in range(4)],
+                Field(Pawn()),
+                Field(black_piece)
+            ]
+            for white_piece in first_row
+            for black_piece in last_row
+            # todo too many rooks :(
+        ]
 
         # self.board = [
         #     [Field(Rook()),Field(Pawn()),*[Field() for _ in range(6)]],
