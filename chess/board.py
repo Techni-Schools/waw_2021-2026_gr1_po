@@ -7,6 +7,10 @@ from bishop import Bishop
 from field import Field
 
 
+class InvalidMoveException(Exception):
+    pass
+
+
 class Board:
     def __init__(self):
         first_row = [Rook(), Knight(), Bishop(), Queen(), King(), Bishop(), Knight(), Rook()]
@@ -50,23 +54,22 @@ class Board:
                 return False
         return True
 
-    def make_move(self, x1: int, y1: int,x2: int, y2: int ):
+    def make_move(self, x1: int, y1: int, x2: int, y2: int):
         if self.is_valid_move(x1, y1, x2, y2):
             self.board[x2][y2].piece = self.board[x1][y1].piece
             self.board[x1][y1].piece = None
         else:
-            print("nie mozna wykonac ruchu")
-
-
+            raise InvalidMoveException()
 
 
 board = Board()
 board.print_board()
-print(board.is_valid_move(1, 1, 1, 2))
-print(board.is_valid_move(0, 0, 0, 2))
-print(board.is_valid_move(0, 0, 1, 6))
+assert board.is_valid_move(1, 1, 1, 2)
+assert not board.is_valid_move(0, 0, 0, 2)
+assert not board.is_valid_move(0, 0, 1, 6)
 
-board.make_move(1,1,1,2)
-# board.make_move(0,0,1,2)
-# board.make_move(0,1,1,4)
+try:
+    board.make_move(1, 1, 1, 2)
+except InvalidMoveException:
+    print("Invalid move")
 board.print_board()
