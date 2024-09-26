@@ -7,10 +7,11 @@ class Pawn(Piece):
         self.moved = False
 
     def get_moves(self, x: int, y: int) -> list[tuple[int, int]]:
-        moves = [(x-1, y+1), (x, y+1), (x+1, y+1)]
+        color_direction = 1 if self.color == Color.WHITE else -1
+        moves = [(x - 1, y + color_direction), (x, y + color_direction), (x + 1, y + color_direction)]
 
         if not self.moved:
-            moves.append((x, y+2))
+            moves.append((x, y + color_direction * 2))
 
         return moves
 

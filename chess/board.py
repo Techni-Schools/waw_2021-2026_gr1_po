@@ -7,6 +7,7 @@ from bishop import Bishop
 from field import Field
 from color import Color
 
+
 class InvalidMoveException(Exception):
     pass
 
@@ -73,6 +74,7 @@ assert not board.is_valid_move(0, 0, 1, 6)
 
 try:
     board.make_move(1, 1, 1, 2)
+    board.make_move(0, 6, 0, 5)
 except InvalidMoveException:
     print("Invalid move")
 board.print_board()
