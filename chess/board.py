@@ -5,7 +5,7 @@ from knight import Knight
 from king import King
 from bishop import Bishop
 from field import Field
-
+from color import Color
 
 class InvalidMoveException(Exception):
     pass
@@ -15,6 +15,10 @@ class Board:
     def __init__(self):
         first_row = [Rook(), Knight(), Bishop(), Queen(), King(), Bishop(), Knight(), Rook()]
         last_row = first_row.copy()
+
+        for black_piece in last_row:
+            black_piece.color = Color.BLACK
+
         self.board = [
             [
                 Field(white_piece),
@@ -23,8 +27,9 @@ class Board:
                 Field(Pawn()),
                 Field(black_piece)
             ]
-            for white_piece in first_row
-            for black_piece in last_row
+            # for white_piece in first_row
+            # for black_piece in last_row
+            for white_piece, black_piece in zip(first_row, last_row)
             # todo too many rooks :(
         ]
 
