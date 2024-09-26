@@ -14,7 +14,7 @@ class InvalidMoveException(Exception):
 class Board:
     def __init__(self):
         first_row = [Rook(), Knight(), Bishop(), Queen(), King(), Bishop(), Knight(), Rook()]
-        last_row = first_row.copy()
+        last_row = [Rook(), Knight(), Bishop(), Queen(), King(), Bishop(), Knight(), Rook()]
 
         for black_piece in last_row:
             black_piece.color = Color.BLACK
@@ -22,27 +22,13 @@ class Board:
         self.board = [
             [
                 Field(white_piece),
-                Field(Pawn()),
+                Field(Pawn(Color.WHITE)),
                 *[Field() for _ in range(4)],
-                Field(Pawn()),
+                Field(Pawn(Color.BLACK)),
                 Field(black_piece)
             ]
-            # for white_piece in first_row
-            # for black_piece in last_row
             for white_piece, black_piece in zip(first_row, last_row)
-            # todo too many rooks :(
         ]
-
-        # self.board = [
-        #     [Field(Rook()),Field(Pawn()),*[Field() for _ in range(6)]],
-        #     [Field(Knight()),Field(Pawn()),*[Field() for _ in range(6)]],
-        #     [Field(Bishop()),Field(Pawn()),*[Field() for _ in range(6)]],
-        #     [Field(Queen()),Field(Pawn()),*[Field() for _ in range(6)]],
-        #     [Field(King()),Field(Pawn()),*[Field() for _ in range(6)]],
-        #     [Field(Bishop()),Field(Pawn()),*[Field() for _ in range(6)]],
-        #     [Field(Knight()),Field(Pawn()),*[Field() for _ in range(6)]],
-        #     [Field(Rook()),Field(Pawn()),*[Field() for _ in range(6)]],
-        # ]
 
     def print_board(self):
         for i in range(7, -1, -1):

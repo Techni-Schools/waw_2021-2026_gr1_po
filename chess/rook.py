@@ -22,7 +22,7 @@ class Rook(Piece):
         return column_moves
 
     def __str__(self):
-        return "Rook"
+        return self.get_piece_name("Rook")
 
     def get_moves_between(self, x1: int, y1: int, x2: int, y2: int) -> list[tuple[int, int]]:
         if x1 == x2:

@@ -23,7 +23,7 @@ class Bishop(Piece):
         return column_moves
 
     def __str__(self):
-        return "Shop"
+        return self.get_piece_name("Shop")
 
     def get_moves_between(self, x1: int, y1: int, x2: int, y2: int) -> list[tuple[int, int]]:
         step_x = 1 if x1 < x2 else -1

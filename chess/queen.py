@@ -8,7 +8,7 @@ class Queen(Piece):
         return Bishop().get_moves(x, y) + Rook().get_moves(x, y)
 
     def __str__(self):
-        return 'Quen'
+        return self.get_piece_name("Quen")
 
     def get_moves_between(self, x1: int, y1: int, x2: int, y2: int) -> list[tuple[int, int]]:
         if x1 == x2 or y1 == y2:

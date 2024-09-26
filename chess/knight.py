@@ -13,7 +13,7 @@ class Knight(Piece):
                 (x-1, y-2)]
 
     def __str__(self):
-        return "Knht"
+        return self.get_piece_name("Knht")
 
     def get_moves_between(self, x1: int, y1: int, x2: int, y2: int) -> list[tuple[int, int]]:
         return []
