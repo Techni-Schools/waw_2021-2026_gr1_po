@@ -30,6 +30,7 @@ class Board:
             ]
             for white_piece, black_piece in zip(first_row, last_row)
         ]
+        self.is_playing = True
 
     def print_board(self):
         for i in range(7, -1, -1):
@@ -65,16 +66,19 @@ class Board:
         else:
             raise InvalidMoveException()
 
+    def convert(self, cord):
+        return ord(cord[0])-ord("A"), int(cord[1])-1
 
 board = Board()
 board.print_board()
 assert board.is_valid_move(1, 1, 1, 2)
 assert not board.is_valid_move(0, 0, 0, 2)
 assert not board.is_valid_move(0, 0, 1, 6)
-
-try:
-    board.make_move(1, 1, 1, 2)
-    board.make_move(0, 6, 0, 5)
-except InvalidMoveException:
-    print("Invalid move")
-board.print_board()
+while board.is_playing:
+    move_input = input("Podaj ruch")
+    try:
+        moves = move_input.split(" ")
+        board.make_move(*board.convert(moves[0]), *board.convert(moves[1]))
+    except InvalidMoveException:
+        print("Invalid move")
+    board.print_board()
