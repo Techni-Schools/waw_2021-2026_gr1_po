@@ -31,6 +31,8 @@ class Board:
             for white_piece, black_piece in zip(first_row, last_row)
         ]
         self.is_playing = True
+        self.current_player = Color.WHITE
+
 
     def print_board(self):
         for i in range(7, -1, -1):
@@ -45,11 +47,14 @@ class Board:
 
     def is_valid_move(self, x1: int, y1: int, x2: int, y2: int) -> bool:
         piece = self.board[x1][y1].piece
+
         if not piece:
             return False
         if self.board[x2][y2].piece:
             return False
 
+        if piece.color != self.current_player:
+            return False
         list_of_moves = piece.get_moves(x1, y1)
         if (x2, y2) not in list_of_moves:
             return False
@@ -63,6 +68,8 @@ class Board:
         if self.is_valid_move(x1, y1, x2, y2):
             self.board[x2][y2].piece = self.board[x1][y1].piece
             self.board[x1][y1].piece = None
+            self.current_player = Color.WHITE if (
+                    self.current_player == Color.BLACK) else Color.BLACK
         else:
             raise InvalidMoveException()
 
@@ -75,7 +82,7 @@ assert board.is_valid_move(1, 1, 1, 2)
 assert not board.is_valid_move(0, 0, 0, 2)
 assert not board.is_valid_move(0, 0, 1, 6)
 while board.is_playing:
-    move_input = input("Podaj ruch")
+    move_input = input(f"Ruch gracza ({board.current_player.value}):  ")
     try:
         moves = move_input.split(" ")
         board.make_move(*board.convert(moves[0]), *board.convert(moves[1]))
