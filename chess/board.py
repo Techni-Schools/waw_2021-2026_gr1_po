@@ -33,7 +33,6 @@ class Board:
         self.is_playing = True
         self.current_player = Color.WHITE
 
-
     def print_board(self):
         for i in range(7, -1, -1):
             print(i + 1, end=' ')
@@ -50,7 +49,7 @@ class Board:
 
         if not piece:
             return False
-        if self.board[x2][y2].piece:
+        if self.board[x2][y2].piece and self.board[x2][y2].piece.color == self.current_player:
             return False
 
         if piece.color != self.current_player:
@@ -66,15 +65,22 @@ class Board:
 
     def make_move(self, x1: int, y1: int, x2: int, y2: int):
         if self.is_valid_move(x1, y1, x2, y2):
+            if isinstance(self.board[x2][y2].piece, King):
+                self.is_playing = False
+                print(f"wygral ({board.current_player.value})")
             self.board[x2][y2].piece = self.board[x1][y1].piece
             self.board[x1][y1].piece = None
             self.current_player = Color.WHITE if (
                     self.current_player == Color.BLACK) else Color.BLACK
+
+
         else:
             raise InvalidMoveException()
 
+
     def convert(self, cord):
-        return ord(cord[0])-ord("A"), int(cord[1])-1
+        return ord(cord[0]) - ord("A"), int(cord[1]) - 1
+
 
 board = Board()
 board.print_board()
