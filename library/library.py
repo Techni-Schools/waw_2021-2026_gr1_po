@@ -78,6 +78,11 @@ class Library:
 
         raise BookDoesNotRented()
 
+    def display_books_title_by_genre(self, genre:str ):
+        for title, books in self.books.items():
+            if genre in map(lambda book: book.genre, books):
+                print(title)
+
 
 library = Library()
 book_1 = Book("Zbrodnia Ikara", "Fiodor Dostojewski", "dramat", 2018)
