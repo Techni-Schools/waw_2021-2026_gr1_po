@@ -21,6 +21,9 @@ class BookTitleNotExists(Exception):
 class BookDoesNotExists(Exception):
     pass
 
+class BookDoesNotRented(Exception):
+    pass
+
 class Library:
     def __init__(self):
         self.users: list[User] = []
@@ -63,6 +66,18 @@ class Library:
         else:
             self.rented_books[user_id] = [book.id]
 
+    def return_book(self, book_id: int):
+        for user_id, books_id in self.rented_books.items():
+            if book_id in books_id:
+                books_id.remove(book_id)
+
+                if not books_id:
+                    self.rented_books.pop(user_id)
+
+                return
+
+        raise BookDoesNotRented()
+
 
 library = Library()
 book_1 = Book("Zbrodnia Ikara", "Fiodor Dostojewski", "dramat", 2018)
@@ -82,3 +97,8 @@ except BookDoesNotExists:
     print("Book does not exist")
 except BookAlreadyRented:
     print("Book is already rented")
+
+try:
+    library.return_book(book_1.id)
+except BookDoesNotRented:
+    print("Book didn't rent")
