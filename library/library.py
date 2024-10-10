@@ -12,6 +12,15 @@ class UserAlreadyExists(Exception):
 class BookAlreadyRented(Exception):
     pass
 
+class UserDoesNotExists(Exception):
+    pass
+
+class BookTitleNotExists(Exception):
+    pass
+
+class BookDoesNotExists(Exception):
+    pass
+
 class Library:
     def __init__(self):
         self.users: list[User] = []
@@ -34,11 +43,18 @@ class Library:
         else:
             self.users.append(user)
 
-    def rent_book(self, user_id: int, book_id: int):
-        for list_book in self.rented_books.values():
-            for book in list_book:
-                if book_id == book:
+    def rent_book(self, user_id: int, book: Book):
+        if user_id not in map(lambda user: user.id, self.users):
+            raise UserDoesNotExists()
+        if not self.books.get(book.title):
+            raise BookTitleNotExists()
+        if book not in self.books[book.title]:
+            raise BookDoesNotExists()
+        for book_ids in self.rented_books.values():
+            for book_id in book_ids:
+                if book.id == book_id:
                     raise BookAlreadyRented()
+
 
 library = Library()
 book_1 = Book("Zbrodnia Ikara", "Fiodor Dostojewski", "dramat", 2018)
