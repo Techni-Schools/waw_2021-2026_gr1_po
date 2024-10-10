@@ -46,14 +46,22 @@ class Library:
     def rent_book(self, user_id: int, book: Book):
         if user_id not in map(lambda user: user.id, self.users):
             raise UserDoesNotExists()
+
         if not self.books.get(book.title):
             raise BookTitleNotExists()
+
         if book not in self.books[book.title]:
             raise BookDoesNotExists()
+
         for book_ids in self.rented_books.values():
             for book_id in book_ids:
                 if book.id == book_id:
                     raise BookAlreadyRented()
+
+        if self.rented_books.get(user_id):
+            self.rented_books[user_id].append(book.id)
+        else:
+            self.rented_books[user_id] = [book.id]
 
 
 library = Library()
@@ -64,3 +72,13 @@ print(library.books)
 user_1 = User("Bartosz", "Prejs", "6969696969", "dupa@gmail.com")
 library.add_user(user_1)
 print(library.users)
+try:
+    library.rent_book(user_1.id, book_1)
+except UserDoesNotExists:
+    print("User does not exist")
+except BookTitleNotExists:
+    print("Book title does not exist")
+except BookDoesNotExists:
+    print("Book does not exist")
+except BookAlreadyRented:
+    print("Book is already rented")
