@@ -1,7 +1,7 @@
 from functools import *
 from user import User
 from book import Book
-
+from rented_book import RentedBook
 
 class BookAlreadyExists(Exception):
     pass
@@ -35,7 +35,7 @@ class Library:
     def __init__(self):
         self.users: list[User] = []
         self.books: dict[str, list[Book]] = {}
-        self.rented_books: dict[int, list[int]] = {}
+        self.rented_books: dict[int, list[RentedBook]] = {}
 
     def add_book(self, book: Book):
         if self.books.get(book.title):
@@ -63,23 +63,22 @@ class Library:
         if book not in self.books[book.title]:
             raise BookDoesNotExists()
 
-        for book_ids in self.rented_books.values():
-            for book_id in book_ids:
-                if book.id == book_id:
+        for rented_books in self.rented_books.values():
+            for rented_book in rented_books:
+                if book.id == rented_book.book_id:
                     raise BookAlreadyRented()
 
         if self.rented_books.get(user_id):
-            self.rented_books[user_id].append(book.id)
+            self.rented_books[user_id].append(RentedBook(book.id))
         else:
-            self.rented_books[user_id] = [book.id]
+            self.rented_books[user_id] = [RentedBook(book.id)]
 
     def return_book(self, book_id: int):
-        for user_id, books_id in self.rented_books.items():
-            if book_id in books_id:
-                books_id.remove(book_id)
-
-                if not books_id:
-                    self.rented_books.pop(user_id)
+        for user_id, rented_books in self.rented_books.items():
+            if book_id in map(lambda rented_book: rented_book.book_id, rented_books):
+                # TODO ZROBIĆ USUWANIE KSIĄŻEK
+                # if not books_id:
+                #    self.rented_books.pop(user_id)
 
                 return
 
@@ -95,7 +94,7 @@ class Library:
         if book_count == 0:
             print(f'Brak książek o gatunku {genre}')
 
-    def print_genre_by_author(self, author:str):
+    def print_genre_by_author(self, author: str):
         books = reduce(list.__add__, self.books.values())
         books = filter(lambda book: book.author == author, books)
         books = map(lambda book: book.genre, books)
@@ -109,7 +108,6 @@ class Library:
     def add_users(self, *args: User):
         for user in args:
             self.add_user(user)
-
 
 
 library = Library()
