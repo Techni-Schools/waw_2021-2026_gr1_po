@@ -75,8 +75,8 @@ class Library:
     def return_book(self, book_id: int):
         for user_id, rented_books in self.rented_books.items():
             if book_id in map(lambda rented_book: rented_book.book_id, rented_books):
-                remaining_books: list[RentedBook] = filter(lambda rented_book: rented_book.book_id != book_id,
-                                                           rented_books)
+                remaining_books: list[RentedBook] = list(filter(lambda rented_book: rented_book.book_id != book_id,
+                                                           rented_books))
                 if remaining_books:
                     self.rented_books[user_id] = remaining_books
                 else:
@@ -146,3 +146,9 @@ except BookDoesNotRented:
 
 # library.display_books_title_by_genre("fantastyka1")
 library.print_genre_by_author("Pan Tadeusz")
+
+library.rent_book(0, book_1)
+library.rent_book(0, book_2)
+print(library.rented_books[0])
+library.return_book(0)
+print(len(library.rented_books))
