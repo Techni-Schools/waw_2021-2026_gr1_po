@@ -3,6 +3,7 @@ from user import User
 from book import Book
 from rented_book import RentedBook
 
+
 class BookAlreadyExists(Exception):
     pass
 
@@ -63,10 +64,8 @@ class Library:
         if book not in self.books[book.title]:
             raise BookDoesNotExists()
 
-        for rented_books in self.rented_books.values():
-            for rented_book in rented_books:
-                if book.id == rented_book.book_id:
-                    raise BookAlreadyRented()
+        if self.rented_books.values() and  book.id in map(lambda rented_book: rented_book.book_id, reduce(list.__add__, self.rented_books.values())):
+            raise BookAlreadyRented()
 
         if self.rented_books.get(user_id):
             self.rented_books[user_id].append(RentedBook(book.id))
@@ -76,12 +75,13 @@ class Library:
     def return_book(self, book_id: int):
         for user_id, rented_books in self.rented_books.items():
             if book_id in map(lambda rented_book: rented_book.book_id, rented_books):
-                # TODO ZROBIĆ USUWANIE KSIĄŻEK
-                # if not books_id:
-                #    self.rented_books.pop(user_id)
-
+                remaining_books: list[RentedBook] = filter(lambda rented_book: rented_book.book_id != book_id,
+                                                           rented_books)
+                if remaining_books:
+                    self.rented_books[user_id] = remaining_books
+                else:
+                    self.rented_books.pop(user_id)
                 return
-
         raise BookDoesNotRented()
 
     def display_books_title_by_genre(self, genre: str):
@@ -108,6 +108,7 @@ class Library:
     def add_users(self, *args: User):
         for user in args:
             self.add_user(user)
+
 
 
 library = Library()
