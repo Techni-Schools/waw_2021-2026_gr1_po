@@ -1,4 +1,6 @@
 from functools import *
+
+from library.returned_book import ReturnedBook
 from user import User
 from book import Book
 from rented_book import RentedBook
@@ -37,6 +39,7 @@ class Library:
         self.users: list[User] = []
         self.books: dict[str, list[Book]] = {}
         self.rented_books: dict[int, list[RentedBook]] = {}
+        self.returned_books: dict[int, list[ReturnedBook]] = {}
 
     def add_book(self, book: Book):
         if self.books.get(book.title):
@@ -64,7 +67,8 @@ class Library:
         if book not in self.books[book.title]:
             raise BookDoesNotExists()
 
-        if self.rented_books.values() and  book.id in map(lambda rented_book: rented_book.book_id, reduce(list.__add__, self.rented_books.values())):
+        if self.rented_books.values() and book.id in map(lambda rented_book: rented_book.book_id,
+                                                         reduce(list.__add__, self.rented_books.values())):
             raise BookAlreadyRented()
 
         if self.rented_books.get(user_id):
@@ -76,7 +80,7 @@ class Library:
         for user_id, rented_books in self.rented_books.items():
             if book_id in map(lambda rented_book: rented_book.book_id, rented_books):
                 remaining_books: list[RentedBook] = list(filter(lambda rented_book: rented_book.book_id != book_id,
-                                                           rented_books))
+                                                                rented_books))
                 if remaining_books:
                     self.rented_books[user_id] = remaining_books
                 else:
@@ -108,7 +112,6 @@ class Library:
     def add_users(self, *args: User):
         for user in args:
             self.add_user(user)
-
 
 
 library = Library()
