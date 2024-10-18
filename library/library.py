@@ -6,6 +6,7 @@ from book import Book
 from rented_book import RentedBook
 
 
+
 class BookAlreadyExists(Exception):
     pass
 
@@ -76,12 +77,14 @@ class Library:
         else:
             self.rented_books[user_id] = [RentedBook(book.id)]
 
+
     def return_book(self, book_id: int):
         for user_id, rented_books in self.rented_books.items():
             if book_id in map(lambda rented_book: rented_book.book_id, rented_books):
                 returned_book: list[RentedBook] = list(filter(lambda rented_book: rented_book.book_id == book_id, rented_books))
                 if self.returned_books.get(book_id):
                     self.returned_books[book_id].append(ReturnedBook(returned_book[0].when_rented, user_id))
+                    #TODO zapisac to do jakiejs zmiennej wyzej
                 else:
                     self.returned_books[book_id] = [ReturnedBook(returned_book[0].when_rented, user_id)]
                 remaining_books: list[RentedBook] = list(filter(lambda rented_book: rented_book.book_id != book_id,
@@ -93,6 +96,7 @@ class Library:
                     self.rented_books.pop(user_id)
 
                 return
+
         raise BookDoesNotRented()
 
     def display_books_title_by_genre(self, genre: str):

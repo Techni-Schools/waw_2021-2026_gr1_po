@@ -8,6 +8,8 @@ class ReturnedBook:
         self.when_returned = date.today()
         self.user_id = user_id
 
+    def fee(self) -> int:
+        return (self.when_returned - self.when_rented).days
+
     def __repr__(self):
         return f"Returned book({self.when_rented},{self.when_returned}, {self.user_id})"
-
