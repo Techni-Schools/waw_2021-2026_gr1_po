@@ -1,6 +1,6 @@
 from functools import *
 
-from library.returned_book import ReturnedBook
+from returned_book import ReturnedBook
 from user import User
 from book import Book
 from rented_book import RentedBook
@@ -79,12 +79,19 @@ class Library:
     def return_book(self, book_id: int):
         for user_id, rented_books in self.rented_books.items():
             if book_id in map(lambda rented_book: rented_book.book_id, rented_books):
+                returned_book: list[RentedBook] = list(filter(lambda rented_book: rented_book.book_id == book_id, rented_books))
+                if self.returned_books.get(book_id):
+                    self.returned_books[book_id].append(ReturnedBook(returned_book[0].when_rented, user_id))
+                else:
+                    self.returned_books[book_id] = [ReturnedBook(returned_book[0].when_rented, user_id)]
                 remaining_books: list[RentedBook] = list(filter(lambda rented_book: rented_book.book_id != book_id,
                                                                 rented_books))
+
                 if remaining_books:
                     self.rented_books[user_id] = remaining_books
                 else:
                     self.rented_books.pop(user_id)
+
                 return
         raise BookDoesNotRented()
 
@@ -155,3 +162,4 @@ library.rent_book(0, book_2)
 print(library.rented_books[0])
 library.return_book(0)
 print(len(library.rented_books))
+print(library.returned_books)
