@@ -1,7 +1,7 @@
 class User:
     user_counter = 0
 
-    def __init__(self, name: str, surname: str, phone: str, email: str):
+    def __init__(self, name: str, surname: str, phone: str = "", email: str = ""):
         self.id = User.user_counter
         self.name = name
         self.surname = surname

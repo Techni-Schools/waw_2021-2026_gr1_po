@@ -1,3 +1,4 @@
+from datetime import date
 from functools import *
 
 from returned_book import ReturnedBook
@@ -41,6 +42,7 @@ class Library:
         self.books: dict[str, list[Book]] = {}
         self.rented_books: dict[int, list[RentedBook]] = {}
         self.returned_books: dict[int, list[ReturnedBook]] = {}
+        self.debts: dict[int, int] = {}
 
     def add_book(self, book: Book):
         if self.books.get(book.title):
@@ -78,15 +80,19 @@ class Library:
             self.rented_books[user_id] = [RentedBook(book.id)]
 
 
-    def return_book(self, book_id: int):
+    def return_book(self, book_id: int, when_returned: date = date.today()):
         for user_id, rented_books in self.rented_books.items():
             if book_id in map(lambda rented_book: rented_book.book_id, rented_books):
                 returned_book: list[RentedBook] = list(filter(lambda rented_book: rented_book.book_id == book_id, rented_books))
+                rb = ReturnedBook(returned_book[0].when_rented, user_id, when_returned)
+                debt = rb.fee()
+                if debt > 0:
+                    if self.debts.get(user_id): self.debts[user_id] += debt
+                    else: self.debts[user_id] = debt
                 if self.returned_books.get(book_id):
-                    self.returned_books[book_id].append(ReturnedBook(returned_book[0].when_rented, user_id))
-                    #TODO zapisac to do jakiejs zmiennej wyzej
+                    self.returned_books[book_id].append(rb)
                 else:
-                    self.returned_books[book_id] = [ReturnedBook(returned_book[0].when_rented, user_id)]
+                    self.returned_books[book_id] = [rb]
                 remaining_books: list[RentedBook] = list(filter(lambda rented_book: rented_book.book_id != book_id,
                                                                 rented_books))
 
@@ -163,7 +169,34 @@ library.print_genre_by_author("Pan Tadeusz")
 
 library.rent_book(0, book_1)
 library.rent_book(0, book_2)
-print(library.rented_books[0])
-library.return_book(0)
-print(len(library.rented_books))
-print(library.returned_books)
+library.return_book(0, date(2024, 12, 26))
+print(library.debts)
+library.return_book(1, date(2024, 12, 29))
+print(library.debts)
+while True:
+    print("1 - dodaj użytkownika")
+    print("2 - dodaj książkę")
+    print("3 - wypisz należności wybranego użytkownika")
+    print("4 - wypisz listę wypożyczonych książęk wybranego użytkownika")
+    print("@ - zakończ program")
+    operation = input("Wybierz opcję: ")
+    match operation:
+        case "1":
+            name = input("podaj imię: ")
+            surname = input("podaj nazwisko: ")
+            library.add_user(User(name, surname))
+        case "2":
+            title = input("podaj tytuł: ")
+            author = input("podaj autora: ")
+            year = int(input("podaj rok wydania: "))
+            genre = input("podaj gatunek: ")
+            library.add_book(Book(title=title, author=author, genre=genre, year=year))
+        case "3":
+            user_id = int(input("Podaj id użytkownika: "))
+
+            if library.debts.get(user_id):
+                print(library.debts[user_id])
+            else:
+                print(0)
+        case _:
+            print("Nie wybrano prawidłowej opcji.")
