@@ -130,6 +130,18 @@ class Library:
         for user in args:
             self.add_user(user)
 
+    def get_book(self, book_id: int):
+        books = reduce(list.__add__, self.books.values())
+        filtered_books = list(filter(lambda book: book.id == book_id, books))
+
+        if not filtered_books:
+            raise BookDoesNotExists()
+
+        return filtered_books[0]
+
+
+
+
 
 library = Library()
 book_1 = Book("Zbrodnia Ikara", "Fiodor Dostojewski", "dramat", 2018)
@@ -173,11 +185,14 @@ library.return_book(0, date(2024, 12, 26))
 print(library.debts)
 library.return_book(1, date(2024, 12, 29))
 print(library.debts)
+
+
 while True:
     print("1 - dodaj użytkownika")
     print("2 - dodaj książkę")
     print("3 - wypisz należności wybranego użytkownika")
     print("4 - wypisz listę wypożyczonych książęk wybranego użytkownika")
+    print("5 - wypozycz ksiazke dla uzytkownika")
     print("@ - zakończ program")
     operation = input("Wybierz opcję: ")
     match operation:
@@ -198,5 +213,21 @@ while True:
                 print(library.debts[user_id])
             else:
                 print(0)
+        case "4":
+            user_id = int(input("Podaj id użytkownika: "))
+            if library.rented_books.get(user_id):
+                print(list(map(lambda rented_book: rented_book.book_id, library.rented_books[user_id])))
+            else:
+                print([])
+
+        case "5":
+            user_id = int(input("Podaj id użytkownika: "))
+            book_id = int(input("Podaj id ksiazki: "))
+            library.rent_book(user_id, library.get_book(book_id))
+
+        case "@":
+            break
+
         case _:
             print("Nie wybrano prawidłowej opcji.")
+
