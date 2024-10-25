@@ -7,7 +7,6 @@ from book import Book
 from rented_book import RentedBook
 
 
-
 class BookAlreadyExists(Exception):
     pass
 
@@ -79,16 +78,18 @@ class Library:
         else:
             self.rented_books[user_id] = [RentedBook(book.id)]
 
-
     def return_book(self, book_id: int, when_returned: date = date.today()):
         for user_id, rented_books in self.rented_books.items():
             if book_id in map(lambda rented_book: rented_book.book_id, rented_books):
-                returned_book: list[RentedBook] = list(filter(lambda rented_book: rented_book.book_id == book_id, rented_books))
+                returned_book: list[RentedBook] = list(
+                    filter(lambda rented_book: rented_book.book_id == book_id, rented_books))
                 rb = ReturnedBook(returned_book[0].when_rented, user_id, when_returned)
                 debt = rb.fee()
                 if debt > 0:
-                    if self.debts.get(user_id): self.debts[user_id] += debt
-                    else: self.debts[user_id] = debt
+                    if self.debts.get(user_id):
+                        self.debts[user_id] += debt
+                    else:
+                        self.debts[user_id] = debt
                 if self.returned_books.get(book_id):
                     self.returned_books[book_id].append(rb)
                 else:
@@ -140,9 +141,6 @@ class Library:
         return filtered_books[0]
 
 
-
-
-
 library = Library()
 book_1 = Book("Zbrodnia Ikara", "Fiodor Dostojewski", "dramat", 2018)
 book_2 = Book("Lalka", "Bolesław Prus", "sci-fi", 2018)
@@ -186,13 +184,14 @@ print(library.debts)
 library.return_book(1, date(2024, 12, 29))
 print(library.debts)
 
-
 while True:
     print("1 - dodaj użytkownika")
     print("2 - dodaj książkę")
     print("3 - wypisz należności wybranego użytkownika")
     print("4 - wypisz listę wypożyczonych książęk wybranego użytkownika")
     print("5 - wypozycz ksiazke dla uzytkownika")
+    print("6 - zwracanie ksiazki")
+    print("7 - wypisz wszystkich uzytkownikow")
     print("@ - zakończ program")
     operation = input("Wybierz opcję: ")
     match operation:
@@ -225,9 +224,17 @@ while True:
             book_id = int(input("Podaj id ksiazki: "))
             library.rent_book(user_id, library.get_book(book_id))
 
+        case "6":
+            book_id = int(input("Podaj id ksiazki: "))
+            library.return_book(book_id)
+
+        case "7":
+            users = library.users
+            users_names = list(map(lambda user: f"{user.id} {user.name} {user.surname}", users))
+            print('\n'.join(users_names))
+
         case "@":
             break
 
         case _:
             print("Nie wybrano prawidłowej opcji.")
-
