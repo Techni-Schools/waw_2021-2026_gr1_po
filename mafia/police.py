@@ -8,7 +8,7 @@ from mafia.player import Player
 class Police(Citizen):
     def __init__(self, username: str):
         super().__init__(username)
-        self.checked_players = {}
+        self.checked_players:dict[str, bool] = {}
 
     def add_vote(self, nominated: dict[str, int]):
         for username in nominated.keys():
@@ -22,10 +22,4 @@ class Police(Citizen):
                 nominated[username] +=1
 
     def check_player(self, player: Player):
-        if isinstance(player, Mafioso):
-            # TODO
-
-
-
-
-
+        self.checked_players[player.username] = isinstance(player, Mafioso)

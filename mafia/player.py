@@ -6,6 +6,9 @@ class Player:
         self.username = username
         self.status = Status.Alive
 
+    def is_alive(self):
+        return self.status.value
+
     @abstractmethod
     def add_vote(self, nominated: dict[str, int]):
         pass

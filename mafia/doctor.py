@@ -4,9 +4,6 @@ class PlayerWasProtected(Exception):
     pass
 class Doctor(Citizen):
 
-    def add_vote(self, nominated: dict[str, int]):
-        super().add_vote(nominated)
-
     def __init__(self, username: str):
         super().__init__(username)
         self.last_protected: str | None = None
@@ -16,7 +13,3 @@ class Doctor(Citizen):
             raise PlayerWasProtected()
 
         self.last_protected = username
-
-
-
-
