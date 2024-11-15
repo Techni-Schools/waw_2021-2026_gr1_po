@@ -4,7 +4,10 @@ from mafioso import Mafioso
 from police import Police
 from doctor import Doctor, PlayerWasProtected
 from player import Player
+from typing import Type, TypeVar
 import random
+
+T = TypeVar('T')
 
 
 class Game:
@@ -49,13 +52,14 @@ class Game:
     def get_alive_players(self) -> list[Player]:
         return list(filter(lambda player: player.is_alive(), self.players))
 
-    def get_special_citizen(self, class_name: type) -> Doctor | Police:
+    def get_special_citizen(self, class_name: type[T]) -> T:
         return list(map(class_name, filter(lambda player: isinstance(player, class_name), self.players)))[0]
 
     def kill_player(self) -> Citizen:
         return list(
-                filter(lambda player: isinstance(player, Citizen) and player.is_alive(), self.get_alive_players())
-            )[0]
+            filter(lambda player: isinstance(player, Citizen) and player.is_alive(), self.get_alive_players())
+        )[0]
+
     def start(self):
         def is_not_finished():
             return self.num_citizens > self.num_mafiosos > 0
@@ -82,7 +86,9 @@ class Game:
 
             if (police := self.get_special_citizen(Police)).is_alive():
                 checked_players: list[str] = list(police.checked_players.keys())
-                left_players: list[Player] = list(filter(lambda player: player.username not in checked_players and player.is_alive() and player.username != police.username, self.get_alive_players()))
+                left_players: list[Player] = list(filter(lambda
+                                                             player: player.username not in checked_players and player.is_alive() and player.username != police.username,
+                                                         self.get_alive_players()))
                 police.check_player(random.choice(left_players))
 
             chosen_player = self.kill_player()
