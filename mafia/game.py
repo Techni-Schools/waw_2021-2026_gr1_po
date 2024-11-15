@@ -102,3 +102,7 @@ class Game:
             return
 
         print("Mafiosos won")
+
+
+Game(['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7', 'p8', 'p9', 'p10']).start()
+#TODO trzeba dekrementowac liczbe citizenow i mafiozow
